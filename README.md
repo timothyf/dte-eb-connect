@@ -32,6 +32,16 @@ npm run start:summation
 ```
 This will subscribe to summation energy readings and print to the console real-time energy usage approximately every minute.
 
+## Compatible Products
+#### DTE Insight
+If you are a DTE customer, the product that includes the Energy Bridge is called DTE Insight. You can download the Insight mobile app, and request the Energy Bridge here:
+https://www.newlook.dteenergy.com/wps/wcm/connect/dte-web/insight/insight-app
+
+-------------------------------------------------------
+#### AEP Ohio
+If you are an AEP Ohio customer, the product that includes the Energy Bridge is called It's Your Power. You can download the It's Your Power mobile app, and request the Energy Bridge here:
+https://itsyourpowerohio.com/
+
 ## License
 Copyright 2019 Timothy Fisher
 

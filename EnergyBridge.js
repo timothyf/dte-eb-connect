@@ -37,15 +37,13 @@ class EnergyBridge {
     this.client.on('connect', function(){
           console.log("EnergyBridge Connected");
           let subscriptionTopics = [Topics.ANNOUNCE,
-                                      Topics.IS_APP_OPEN_RESPONSE,
-                                      Topics.CLIENTS];
+                                    Topics.IS_APP_OPEN_RESPONSE,
+                                    Topics.CLIENTS];
           if (that.instant) {
-            console.log("Subscribing to instant usage");
             subscriptionTopics.push(Topics.INSTANT_DEMAND);
             subscriptionTopics.push(Topics.INSTANT_DEMAND_ZIGBEE);
           }
           if (that.summation) {
-            console.log("Subscriing to 1-min periodic usage");
             subscriptionTopics.push(Topics.MINUTE_SUMMATION);
           }
           that.addSubscriptions(subscriptionTopics)

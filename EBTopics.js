@@ -10,7 +10,9 @@ const CLIENTS = "clients/#";
 
 module.exports = {MINUTE_SUMMATION,
                   INSTANT_DEMAND,
+                  INSTANT_DEMAND_ZIGBEE,
                   ANNOUNCE,
                   IS_APP_OPEN,
                   IS_APP_OPEN_ZIGBEE,
+                  IS_APP_OPEN_RESPONSE,
                   CLIENTS}
