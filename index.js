@@ -3,15 +3,18 @@ require('dotenv').config();
 var EnergyBridge = require('./EnergyBridge.js');
 var Topics = require('./EBTopics.js');
 
+let instant = false;
+let summation = true;
+
 if (process.argv[2] && process.argv[2] === '--instant') {
-  console.log('Started with instant');
+  instant = true;
+  summation = true;
 }
 else if (process.argv[2] && process.argv[2] === '--summation') {
-  console.log('Started with summation');
+  summation = true;
 }
 
-
-let eb = new EnergyBridge(process.env.EB_IP, logger);
+let eb = new EnergyBridge(process.env.EB_IP, logger, instant, summation);
 eb.connect({username:process.env.EB_USERNAME,
             password:process.env.EB_PASSWORD,
             clientId:process.env.EB_CLIENT_ID});

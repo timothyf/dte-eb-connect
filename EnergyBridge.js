@@ -4,10 +4,12 @@ var Topics = require('./EBTopics.js');
 
 class EnergyBridge {
 
-  constructor(ip, logger) {
+  constructor(ip, logger, instant, summation) {
     this.ip = ip;
     this.client = null;
     this.logger = logger;
+    this.instant = instant;
+    this.summation = summation;
   }
 
   connect(options) {
@@ -32,15 +34,22 @@ class EnergyBridge {
 
   addListeners() {
     var that = this;
-
     this.client.on('connect', function(){
           console.log("EnergyBridge Connected");
-          that.addSubscriptions([Topics.ANNOUNCE,
-                                 Topics.MINUTE_SUMMATION,
-                                 Topics.INSTANT_DEMAND,
-                                 Topics.INSTANT_DEMAND_ZIGBEE,
-                                 Topics.IS_APP_OPEN_RESPONSE,
-                                 Topics.CLIENTS])});
+          let subscriptionTopics = [Topics.ANNOUNCE,
+                                      Topics.IS_APP_OPEN_RESPONSE,
+                                      Topics.CLIENTS];
+          if (that.instant) {
+            console.log("Subscribing to instant usage");
+            subscriptionTopics.push(Topics.INSTANT_DEMAND);
+            subscriptionTopics.push(Topics.INSTANT_DEMAND_ZIGBEE);
+          }
+          if (that.summation) {
+            console.log("Subscriing to 1-min periodic usage");
+            subscriptionTopics.push(Topics.MINUTE_SUMMATION);
+          }
+          that.addSubscriptions(subscriptionTopics)
+    });
     this.client.on('message', function (topic, message) {
       console.log("Message received");
       that.logger({topic:topic, body:message});
@@ -62,6 +71,8 @@ class EnergyBridge {
     });
     this.client.on('offline', function(error) {
       console.log("Energy Bridge offline");
+      console.log("Be sure you are on the same local network that your Energy Bridge is connected to.");
+      that.disconnect();
     });
   }
 
