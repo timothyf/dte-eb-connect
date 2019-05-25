@@ -3,6 +3,10 @@
 If you are a customer of DTE, or any other energy company that uses the Powerley Energy Bridge product, this script will allow you to connect to the Energy Bridge over MQTT to read real-time energy usage data and log that data to the console from which this script is run.
 
 ## Installing
+First clone this repository onto your local machine.
+```sh
+git clone git@github.com:timothyf/dte-eb-connect.git
+```
 Rename `.env.sample` to `.env` and replace `EP_IP`, `EB_PASSWORD`, and `EB_CLIENT_ID`
 ```sh
 npm install
