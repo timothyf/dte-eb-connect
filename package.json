@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "start:instant": "npm start -- --instant",
+    "start:summation": "npm start -- --summation",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Timothy Fisher",
