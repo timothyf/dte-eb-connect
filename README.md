@@ -1,6 +1,6 @@
 
 # DTE Energy Bridge Connect
-If you are a customer of DTE, or any other energy company that uses the Powerley Energy Bridge product, this script will allow you to connect to the Energy Bridge over MQTT to read real-time energy usage data and log that data to the console from which this script is run.
+If you are a customer of DTE, or any other energy company that uses the Powerley Energy Bridge product, this script will allow you to connect to the Energy Bridge over MQTT to read real-time energy usage data and log that data to the console from which this script is run. See Compatible Products section below for known products that use the Powerley Energy Bridge.
 
 ## Installing
 First clone this repository onto your local machine.

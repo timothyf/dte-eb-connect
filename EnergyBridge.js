@@ -1,5 +1,13 @@
-var mqtt = require('mqtt');
-var Topics = require('./EBTopics.js');
+const mqtt = require('mqtt');
+const Topics = require('./EBTopics.js');
+const Logger = require('./Logger.js');
+require('dotenv').config();
+
+
+const SUBSRIPTION_TOPICS = [Topics.ANNOUNCE,
+                            Topics.IS_APP_OPEN_RESPONSE,
+                            Topics.METERING_RESPONSE,
+                            Topics.CLIENTS];
 
 
 class EnergyBridge {
@@ -13,21 +21,21 @@ class EnergyBridge {
   }
 
   connect(options) {
-    console.log("Attempting to connect to EnergyBridge...");
+    Logger.event("Attempting to connect to EnergyBridge...");
     var that = this;
     this.client = mqtt.connect('tcp://' + this.ip, options);
     this.addListeners();
   }
 
   disconnect() {
-    console.log("Disconnecting from EnergyBridge");
+    Logger.event("Disconnecting from EnergyBridge");
     this.client.end();
   }
 
   addSubscriptions(topics) {
     var that = this;
     topics.forEach(function(topic) {
-      console.log("Subscribing to " + topic);
+      Logger.subscribe("Subscribing to " + topic);
       that.client.subscribe(topic);
     });
   }
@@ -35,10 +43,8 @@ class EnergyBridge {
   addListeners() {
     var that = this;
     this.client.on('connect', function(){
-          console.log("EnergyBridge Connected");
-          let subscriptionTopics = [Topics.ANNOUNCE,
-                                    Topics.IS_APP_OPEN_RESPONSE,
-                                    Topics.CLIENTS];
+          Logger.event("EnergyBridge Connected");
+          let subscriptionTopics = SUBSRIPTION_TOPICS;
           if (that.instant) {
             subscriptionTopics.push(Topics.INSTANT_DEMAND);
             subscriptionTopics.push(Topics.INSTANT_DEMAND_ZIGBEE);
@@ -49,27 +55,28 @@ class EnergyBridge {
           that.addSubscriptions(subscriptionTopics)
     });
     this.client.on('message', function (topic, message) {
-      console.log("Message received");
+      Logger.event("Message RECEIVED");
       that.logger({topic:topic, body:message});
       if (topic == Topics.MINUTE_SUMMATION) {
-        that.disconnect();
+        //that.disconnect();
       }
     });
     this.client.on('error', function(error) {
-      console.log(error.message);
+      Logger.fail(error.message);
     });
     this.client.on('close', function(error) {
-      console.log(`Connection closed (${error})`);
+      let msg = (error ? `(${error})` : "");
+      Logger.fail(`Connection closed ${msg}`);
     });
     this.client.on('reconnect', function(error) {
-      console.log("Reconnecting to Energy Bridge");
+      Logger.event("Reconnecting to Energy Bridge");
     });
     this.client.on('disconnect', function(error) {
-      console.log("Energy Bridge disconnected");
+      Logger.event("Energy Bridge disconnected");
     });
     this.client.on('offline', function(error) {
-      console.log("Energy Bridge offline");
-      console.log("Be sure you are on the same local network that your Energy Bridge is connected to.");
+      Logger.fail("Energy Bridge offline");
+      Logger.fail("Be sure you are on the same local network that your Energy Bridge is connected to.");
       that.disconnect();
     });
   }
@@ -78,14 +85,16 @@ class EnergyBridge {
     if (this.client) {
       let time = Date.now();
       let payload = "{'request_id':'" + time.toString() + "'}";
-      this.client.publish(Topics.IS_APP_OPEN, payload, {}, function(err) {
-        if (err) {
-          console.log("Error while publishing: " + err);
-        }
-      });
+      // Logger.event("Publishing IS_APP_OPEN");
+      // this.client.publish(Topics.IS_APP_OPEN, payload, {}, function(err) {
+      //   if (err) {
+      //     Logger.event("Error while publishing: " + err);
+      //   }
+      // });
+      Logger.event("Publishing IS_APP_OPEN_ZIGBEE");
       this.client.publish(Topics.IS_APP_OPEN_ZIGBEE, payload, {}, function(err) {
         if (err) {
-          console.log("Error while publishing: " + err);
+          Logger.fail("Error while publishing: " + err);
         }
       });
     }
@@ -108,7 +117,7 @@ class EnergyBridge {
   }
 
   static parseAnnounce(message) {
-    return message;
+    return JSON.stringify(message);
   }
 
   static convertTimestamp(timeStamp) {
