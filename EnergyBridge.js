@@ -1,21 +1,23 @@
 const mqtt = require('mqtt');
 const Topics = require('./EBTopics.js');
 const Logger = require('./Logger.js');
+const MessageHandler = require('./MessageHandler.js');
 require('dotenv').config();
 
 
-const SUBSRIPTION_TOPICS = [Topics.ANNOUNCE,
-                            Topics.IS_APP_OPEN_RESPONSE,
-                            Topics.METERING_RESPONSE,
-                            Topics.CLIENTS];
+const SUBSRIPTION_TOPICS = [Topics.ALL];//,
+                            // Topics.ANNOUNCE,
+                            // Topics.ZIGBEE_METERING,
+                            // Topics.IS_APP_OPEN_RESPONSE,
+                            // Topics.METERING_RESPONSE,
+                            // Topics.CLIENTS];
 
 
 class EnergyBridge {
 
-  constructor(ip, logger, instant, summation) {
+  constructor(ip, instant, summation) {
     this.ip = ip;
     this.client = null;
-    this.logger = logger;
     this.instant = instant;
     this.summation = summation;
   }
@@ -45,18 +47,17 @@ class EnergyBridge {
     this.client.on('connect', function(){
           Logger.event("EnergyBridge Connected");
           let subscriptionTopics = SUBSRIPTION_TOPICS;
-          if (that.instant) {
-            subscriptionTopics.push(Topics.INSTANT_DEMAND);
-            subscriptionTopics.push(Topics.INSTANT_DEMAND_ZIGBEE);
-          }
-          if (that.summation) {
-            subscriptionTopics.push(Topics.MINUTE_SUMMATION);
-          }
+          // if (that.instant) {
+          //   subscriptionTopics.push(Topics.INSTANT_DEMAND);
+          //   subscriptionTopics.push(Topics.INSTANT_DEMAND_ZIGBEE);
+          // }
+          // if (that.summation) {
+          //   subscriptionTopics.push(Topics.MINUTE_SUMMATION);
+          // }
           that.addSubscriptions(subscriptionTopics)
     });
     this.client.on('message', function (topic, message) {
-      Logger.event("Message RECEIVED");
-      that.logger({topic:topic, body:message});
+      MessageHandler.handle({topic:topic, body:message});
       if (topic == Topics.MINUTE_SUMMATION) {
         //that.disconnect();
       }
