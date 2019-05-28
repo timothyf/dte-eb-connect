@@ -7,7 +7,7 @@
     "start": "node index.js",
     "start:instant": "npm start -- --instant",
     "start:summation": "npm start -- --summation",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --detectOpenHandles"
   },
   "author": "Timothy Fisher",
   "license": "ISC",
@@ -15,5 +15,8 @@
     "chalk": "^2.4.2",
     "dotenv": "^8.0.0",
     "mqtt": "2.18.8"
+  },
+  "devDependencies": {
+    "jest": "^24.8.0"
   }
 }

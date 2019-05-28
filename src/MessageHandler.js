@@ -1,12 +1,10 @@
 const Topics = require('./EBTopics.js');
 const Logger = require('./Logger.js');
-const EnergyBridge = require('./EnergyBridge.js');
 
 
 class MessageHandler {
 
   static handle(message) {
-    const EnergyBridge = require('./EnergyBridge.js');
     var that = this;
     let cmpStr = message.topic;
     if (message.topic.includes('device') && message.topic.includes('announce')) {
@@ -17,12 +15,12 @@ class MessageHandler {
       case Topics.REMOTE_ANNOUNCE:
       case Topics.DEVICE_ANNOUNCE: {
         Logger.content1('TOPIC: ' + message.topic);
-        Logger.white(EnergyBridge.parseAnnounce(JSON.parse(message.body)));
+        Logger.white(this.parseAnnounce(JSON.parse(message.body)));
         break;
       }
       case Topics.SUMMATION: {
         Logger.content1('TOPIC: ' + message.topic);
-        Logger.white(EnergyBridge.parseMinuteSummation(JSON.parse(message.body)));
+        Logger.white(this.parseMinuteSummation(JSON.parse(message.body)));
         break;
       }
       case Topics.REMOTE_SUMMATION:
@@ -33,12 +31,12 @@ class MessageHandler {
       }
       case Topics.INSTANT_DEMAND: {
         Logger.content1('TOPIC: ' + message.topic);
-        Logger.white(EnergyBridge.parseInstantDemand(JSON.parse(message.body)));
+        Logger.white(this.parseInstantDemand(JSON.parse(message.body)));
         break;
       }
       case Topics.INSTANT_DEMAND_ZIGBEE: {
         Logger.content1('TOPIC: ' + message.topic);
-        Logger.white(EnergyBridge.parseInstantDemand(JSON.parse(message.body)));
+        Logger.white(this.parseInstantDemand(JSON.parse(message.body)));
         break;
       }
       case Topics.METERING_RESPONSE: {
@@ -74,6 +72,30 @@ class MessageHandler {
         Logger.white(message.body);
       }
     }
+  }
+
+  static parseMinuteSummation(message) {
+    let result = "";
+    let date = new Date(message.time*1000);
+    let year = date.getFullYear();
+    result += this.convertTimestamp(message.time);
+    result += "\n";
+    result += `${Math.round(message.value)} watts`;
+    return result;
+  }
+
+  static parseInstantDemand(message) {
+    le5 result = message.toString();
+    return result;
+  }
+
+  static parseAnnounce(message) {
+    return JSON.stringify(message);
+  }
+
+  static convertTimestamp(timeStamp) {
+    let date = new Date(timeStamp);
+    return date.toLocaleTimeString('en-US');
   }
 }
 
