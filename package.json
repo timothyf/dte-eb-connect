@@ -10,7 +10,7 @@
     "test": "jest --detectOpenHandles"
   },
   "author": "Timothy Fisher",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "chalk": "^2.4.2",
     "dotenv": "^8.0.0",

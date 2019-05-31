@@ -16,4 +16,4 @@ eb.connect({username:process.env.EB_USERNAME,
             password:process.env.EB_PASSWORD,
             clientId:process.env.EB_CLIENT_ID});
 
-//setInterval(function() {eb.refresh();}, 4000);
+setInterval(function() {eb.refresh();}, 4000);

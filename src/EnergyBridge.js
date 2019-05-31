@@ -88,21 +88,21 @@ class EnergyBridge {
   refresh() {
     if (this.client) {
       let time = Date.now();
-      let payload = "{'request_id':'" + time.toString() + "'}";
-      // Logger.event("Publishing IS_APP_OPEN");
-      // let pubTopic = getTopicByName('IS_APP_OPEN');
-      // this.client.publish(pubTopic.match, payload, {}, function(err) {
-      //   if (err) {
-      //     Logger.event("Error while publishing: " + err);
-      //   }
-      // });
-      Logger.event("Publishing IS_APP_OPEN_ZIGBEE");
-      let pubTopic = getTopicByName('IS_APP_OPEN_ZIGBEE');
+      let payload = JSON.stringify(this.getTimestampRequestIdBody()); //"{'timestamp':" + time.toString() + ", 'request_id':'CH5tlREh-3'}";
+      Logger.event("Publishing IS_APP_OPEN");
+      let pubTopic = this.getTopicByName('IS_APP_OPEN');
       this.client.publish(pubTopic.match, payload, {}, function(err) {
         if (err) {
-          Logger.fail("Error while publishing: " + err);
+          Logger.event("Error while publishing: " + err);
         }
       });
+      // Logger.event("Publishing IS_APP_OPEN_ZIGBEE");
+      // pubTopic = this.getTopicByName('IS_APP_OPEN_ZIGBEE');
+      // this.client.publish(pubTopic.match, payload, {}, function(err) {
+      //   if (err) {
+      //     Logger.fail("Error while publishing: " + err);
+      //   }
+      // });
     }
   }
 
@@ -110,6 +110,20 @@ class EnergyBridge {
     return Topics.find(function(topic) {
       return topic.name == name;
     });
+  }
+
+  getTimestampRequestIdBody() {
+    let time = Date.now();
+    let body = {};
+    body.timestamp = time.toString();
+    body.request_id = 'DteEnergyBridgeClient-' + this.getRandomInt(0, 100);
+    return body;
+  }
+
+  getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
   }
 }
 
