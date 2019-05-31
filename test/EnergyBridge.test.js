@@ -1,4 +1,4 @@
-const EnergyBridge = require('../EnergyBridge.js');
+const EnergyBridge = require('../src/EnergyBridge.js');
 
 test('constructs an EnergyBridge object', () => {
   let instant = true;

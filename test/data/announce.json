@@ -1,0 +1,9 @@
+{
+  "device": "8fa08962-5382-45a9-a94d-29d8592132bf",
+  "status": "online",
+  "eb_os_channel": "stable",
+  "eb_os_version": "v1.9.1",
+  "nucleus_version": "1.9.1",
+  "serial": "251fb9d4ea9c2bd7",
+  "private_address": "0.0.0.0"
+}

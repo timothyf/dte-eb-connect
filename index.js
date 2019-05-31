@@ -1,5 +1,4 @@
-const EnergyBridge = require('./EnergyBridge.js');
-
+const EnergyBridge = require('./src/EnergyBridge.js');
 
 let instant = false;
 let summation = true;

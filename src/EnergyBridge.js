@@ -1,27 +1,28 @@
 const mqtt = require('mqtt');
-const Topics = require('./EBTopics.js');
 const Logger = require('./Logger.js');
 const MessageHandler = require('./MessageHandler.js');
 require('dotenv').config();
+const Topics = require('./config-topics.js').topics();
 
-
-const SUBSRIPTION_TOPICS = [Topics.ALL];//,
-                            // Topics.ANNOUNCE,
-                            // Topics.ZIGBEE_METERING,
-                            // Topics.IS_APP_OPEN_RESPONSE,
-                            // Topics.METERING_RESPONSE,
-                            // Topics.CLIENTS];
 
 
 class EnergyBridge {
 
   constructor(ip, port, instant, summation) {
+    var that = this;
     this.ip = ip;
     this.port = port;
     this.client = null;
     this.instant = instant;
     this.summation = summation;
     this.connected = false;
+
+    this.subscriptionTopics = [];
+    Topics.forEach(function(topic) {
+      if (topic.enabled == true) {
+        that.subscriptionTopics.push(topic);
+      }
+    });
   }
 
   connect(options) {
@@ -45,8 +46,8 @@ class EnergyBridge {
   addSubscriptions(topics) {
     var that = this;
     topics.forEach(function(topic) {
-      Logger.subscribe("Subscribing to " + topic);
-      that.client.subscribe(topic);
+      Logger.subscribe("Subscribing to " + topic.name);
+      that.client.subscribe(topic.match);
     });
   }
 
@@ -55,21 +56,10 @@ class EnergyBridge {
     this.client.on('connect', function(){
           Logger.event("EnergyBridge Connected");
           that.connected = true;
-          let subscriptionTopics = SUBSRIPTION_TOPICS;
-          // if (that.instant) {
-          //   subscriptionTopics.push(Topics.INSTANT_DEMAND);
-          //   subscriptionTopics.push(Topics.INSTANT_DEMAND_ZIGBEE);
-          // }
-          // if (that.summation) {
-          //   subscriptionTopics.push(Topics.MINUTE_SUMMATION);
-          // }
-          that.addSubscriptions(subscriptionTopics)
+          that.addSubscriptions(that.subscriptionTopics)
     });
     this.client.on('message', function (topic, message) {
       MessageHandler.handle({topic:topic, body:message});
-      if (topic == Topics.MINUTE_SUMMATION) {
-        //that.disconnect();
-      }
     });
     this.client.on('error', function(error) {
       Logger.fail(error.message);
@@ -100,18 +90,26 @@ class EnergyBridge {
       let time = Date.now();
       let payload = "{'request_id':'" + time.toString() + "'}";
       // Logger.event("Publishing IS_APP_OPEN");
-      // this.client.publish(Topics.IS_APP_OPEN, payload, {}, function(err) {
+      // let pubTopic = getTopicByName('IS_APP_OPEN');
+      // this.client.publish(pubTopic.match, payload, {}, function(err) {
       //   if (err) {
       //     Logger.event("Error while publishing: " + err);
       //   }
       // });
       Logger.event("Publishing IS_APP_OPEN_ZIGBEE");
-      this.client.publish(Topics.IS_APP_OPEN_ZIGBEE, payload, {}, function(err) {
+      let pubTopic = getTopicByName('IS_APP_OPEN_ZIGBEE');
+      this.client.publish(pubTopic.match, payload, {}, function(err) {
         if (err) {
           Logger.fail("Error while publishing: " + err);
         }
       });
     }
+  }
+
+  getTopicByName(name) {
+    return Topics.find(function(topic) {
+      return topic.name == name;
+    });
   }
 }
 
