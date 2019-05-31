@@ -6,13 +6,12 @@ class MessageHandler {
 
   static handle(message) {
     if (!this.searchTopicByName(message.topic)) {
-      Logger.content1('TOPIC: ' + message.topic);
-      Logger.fail("Unhandled Topic");
+      Logger.fail(`Unhandled Topic - ${message.topic}`);
       Logger.white(message.body);
     }
     else {
       if (message.topic.includes('polling_mode')) {return;} // don't log polling_mode messages
-      Logger.content1('TOPIC: ' + message.topic);
+      Logger.content1(`TOPIC: ${message.topic}`);
       let msg = this.parse(message);
       if (msg) {Logger.white(msg);}
     }
@@ -20,17 +19,16 @@ class MessageHandler {
 
   static parse(message) {
     let topic = this.getTopicByName(message.topic);
-    if (!topic || !this.searchTopicByName(message.topic)) {
+    if (!topic) {
       return 'Unable to parse message for topic: ' + message.topic;
     }
-    if (topic.name == 'SUMMATION') {
+    if (topic.name == 'SUMMATION' ||
+        topic.name == 'INSTANT_DEMAND') {
       let body = JSON.parse(message.body);
-      let result = this.convertTimestamp(body.time) + " - ";
-      result += `${Math.round(body.value)} watts`;
-      return result;
-    }
-    else if (topic.name == 'INSTANT_DEMAND') {
-      return message.body;
+      let value = null;
+      if (topic.name == 'SUMMATION') {value = body.value};
+      if (topic.name == 'INSTANT_DEMAND') {value = body.demand};
+      return this.formatUsage(body.time, value);
     }
     else if (topic.name == 'INSTANT_DEMAND_ZIGBEE' ||
              topic.name == 'REMOTE_INSTANT_DEMAND' ||
@@ -46,6 +44,12 @@ class MessageHandler {
     else {
       return message.body;
     }
+  }
+
+  static formatUsage(time, value) {
+    let result = this.convertTimestamp(time) + " - ";
+    result += `${Math.round(value)} watts`;
+    return result;
   }
 
   static convertTimestamp(timeStamp) {
