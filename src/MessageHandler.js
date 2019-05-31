@@ -22,24 +22,12 @@ class MessageHandler {
     if (!topic) {
       return 'Unable to parse message for topic: ' + message.topic;
     }
-    if (topic.name == 'SUMMATION' ||
-        topic.name == 'INSTANT_DEMAND') {
+    if (topic.category == 'usage-instant' || topic.category == 'usage-summation') {
       let body = JSON.parse(message.body);
       let value = null;
-      if (topic.name == 'SUMMATION') {value = body.value};
-      if (topic.name == 'INSTANT_DEMAND') {value = body.demand};
+      if (topic.category == 'usage-summation') {value = body.value};
+      if (topic.category == 'usage-instant') {value = body.demand};
       return this.formatUsage(body.time, value);
-    }
-    else if (topic.name == 'INSTANT_DEMAND_ZIGBEE' ||
-             topic.name == 'REMOTE_INSTANT_DEMAND' ||
-             topic.name == 'REMOTE_SUMMATION' ||
-             topic.name == 'MINUTE_SUMMATION' ||
-             topic.name == 'REMOTE_MINUTE_SUMMATION' ||
-             topic.name == 'POLLING_MODE' ||
-             topic.name == 'POLLING_MODE_RESPONSE' ||
-             topic.name == 'REMOTE_ANNOUNCE' ||
-             topic.name == 'IS_APP_OPEN') {
-      return;
     }
     else {
       return message.body;

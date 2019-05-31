@@ -96,13 +96,6 @@ class EnergyBridge {
           Logger.event("Error while publishing: " + err);
         }
       });
-      // Logger.event("Publishing IS_APP_OPEN_ZIGBEE");
-      // pubTopic = this.getTopicByName('IS_APP_OPEN_ZIGBEE');
-      // this.client.publish(pubTopic.match, payload, {}, function(err) {
-      //   if (err) {
-      //     Logger.fail("Error while publishing: " + err);
-      //   }
-      // });
     }
   }
 

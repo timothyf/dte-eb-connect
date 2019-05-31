@@ -1,17 +1,25 @@
 module.exports = {
   topics: function() {
     let topicsArray = [
-      { name:'ALL', match:"#", enabled:true },
-      { name:'ANNOUNCE', match:'announce', enabled:false, parser:'parseAnnounce' },
+      { name:'ALL', match:"#", enabled:false },
+      { name:'ANNOUNCE', match:'announce', enabled:false },
       { name:'CLIENTS', match:'clients/#', enabled:false },
       { name:'EVENTS', match:'event/#', enabled:false },
       { name:'REMOTE_ANNOUNCE', match:'remote/announce', enabled:false },
       { name:'DEVICE_ANNOUNCE', match:'device/?/announce', enabled:false },
 
-      { name:'REMOTE_REQUEST_ANNOUNCE', match:'remote/request/announce', enabled:false },
-      { name:'REMOTE_RESPOND_ANNOUNCE', match:'remote/response/announce/#', enabled:false },
+      { name:'SUMMATION', match:'summation', category: 'usage-summation', enabled:true },
+      { name:'REMOTE_SUMMATION', match:'remote/summation', category: 'usage-summation', enabled:false },
+      { name:'MINUTE_SUMMATION', match:'event/metering/summation/minute', category:'usage-summation', enabled:false },
+      { name:'REMOTE_MINUTE_SUMMATION', match:'remote/event/metering/summation/minute', category:'usage-summation', enabled:false },
+      { name:'INSTANT_DEMAND', match:'event/metering/instantaneous_demand', category: 'usage-instant', enabled:true },
+      { name:'REMOTE_INSTANT_DEMAND', match:'remote/event/metering/instantaneous_demand', category:'usage-instant', enabled:false },
+
       { name:'REMOTE_REQUEST_SUMMATION', match:'remote/request/metering/summation/minute', enabled:false },
       { name:'REMOTE_RESPONSE_SUMMATION', match:'remote/response/metering/summation/minute/#', enabled:false },
+
+      { name:'REMOTE_REQUEST_ANNOUNCE', match:'remote/request/announce', enabled:false },
+      { name:'REMOTE_RESPOND_ANNOUNCE', match:'remote/response/announce/#', enabled:false },
       { name:'REMOTE_REQUEST_POLLING_MODE_SET', match:'remote/request/metering/polling_mode/set', enabled:false },
       { name:'REMOTE_REQUEST_CONFIGURE', match:'remote/request/metering/configure', enabled:false },
       { name:'REMOTE_RESPONSE_CONFIGURE', match:'remote/response/metering/configure', enabled:false },
@@ -25,16 +33,6 @@ module.exports = {
       { name:'REMOTE_REQUEST_ENLISTED_DEVICES', match:'remote/request/demand_response/enlisted_devices', enabled:false },
       { name:'REMOTE_RESPONSE_ENLISTED_DEVICES', match:'remote/response/demand_response/enlisted_devices', enabled:false },
 
-      { name:'SUMMATION', match:'summation', enabled:false },
-      { name:'REMOTE_SUMMATION', match:'remote/summation', enabled:false },
-      { name:'EVENT_METERING', match:'event/metering/#', enabled:false },
-      { name:'ZIGBEE_METERING', match:'_zigbee_metering/#', enabled:false },
-      { name:'MINUTE_SUMMATION', match:'event/metering/summation/minute', enabled:false },
-      { name:'REMOTE_MINUTE_SUMMATION', match:'remote/event/metering/summation/minute', enabled:false },
-      { name:'INSTANT_DEMAND', match:'event/metering/instantaneous_demand', enabled:false },
-      { name:'REMOTE_INSTANT_DEMAND', match:'remote/event/metering/instantaneous_demand', enabled:false },
-      { name:'INSTANT_DEMAND_ZIGBEE', match:'_zigbee_metering/event/metering/instantaneous_demand', enabled:false },
-
       { name:'POLLING_MODE', match:'request/metering/polling_mode/get', enabled:false },
       { name:'POLLING_MODE_RESPONSE', match:'response/metering/polling_mode/get/ble_data2', enabled:false },
       { name:'HEARTBEAT_REQUEST', match:'request/diagnostics/heartbeat_stats', enabled:false },
@@ -43,10 +41,7 @@ module.exports = {
       { name:'REMOTE_ZIGBEE_DIAG', match:'remote/event/diagnostics/zigbee', enabled:false },
 
       { name:'IS_APP_OPEN', match:'remote/request/is_app_open', enabled:false },
-      { name:'IS_APP_OPEN_ZIGBEE', match:'_zigbee_metering/request/is_app_open', enabled:false },
-      { name:'IS_APP_OPEN_RESPONSE_ZIGBEE', match:'_zigbee_metering/response/is_app_open/#', enabled:false },
       { name:'REMOTE_RESPONSE_IS_APP_OPEN', match:'remote/response/is_app_open/#', enabled:false },
-      { name:'METERING_RESPONSE', match:'_zigbee_metering/response/#', enabled:false },
 
       { name:'EBAPI_POST_SUMMATIONS', match:'request/ebapi/post_minute_summations', enabled:false },
       { name:'EBAPI_POST_REALTIME', match:'request/ebapi/post_realtime', enabled:false },
