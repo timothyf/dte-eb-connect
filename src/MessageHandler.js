@@ -1,4 +1,4 @@
-const Logger = require('./Logger.js');
+const ConsoleLogger = require('./loggers/ConsoleLogger.js');
 const Topics = require('./config-topics.js').topics();
 
 
@@ -6,14 +6,14 @@ class MessageHandler {
 
   static handle(message) {
     if (!this.searchTopicByName(message.topic)) {
-      Logger.fail(`Unhandled Topic - ${message.topic}`);
-      Logger.white(message.body);
+      ConsoleLogger.fail(`Unhandled Topic - ${message.topic}`);
+      ConsoleLogger.white(message.body);
     }
     else {
       if (message.topic.includes('polling_mode')) {return;} // don't log polling_mode messages
-      Logger.content1(`TOPIC: ${message.topic}`);
+      ConsoleLogger.content1(`TOPIC: ${message.topic}`);
       let msg = this.parse(message);
-      if (msg) {Logger.white(msg);}
+      if (msg) {ConsoleLogger.white(msg);}
     }
   }
 
