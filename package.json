@@ -12,14 +12,17 @@
   "author": "Timothy Fisher",
   "license": "MIT",
   "dependencies": {
+    "ansi-regex": ">=4.1.1",
     "aws-iot-device-sdk": "^2.2.1",
     "chalk": "^2.4.2",
     "colors": "^1.0.3",
     "dotenv": "^8.0.0",
+    "handlebars": ">=4.7.7",
     "moment": "^2.10.2",
     "mqtt": "2.18.8"
   },
   "devDependencies": {
+    "ansi-regex": ">=4.1.1",
     "handlebars": ">=4.7.7",
     "jest": "^24.8.0"
   }
