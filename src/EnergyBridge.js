@@ -1,8 +1,15 @@
 const mqtt = require('mqtt');
-const ConsoleLogger = require('./loggers/ConsoleLogger.js');
+var log = require('./ConsoleLogger.js');
+const ConsoleLogger = require('./ConsoleLogger.js').ConsoleLogger;
 const MessageHandler = require('./MessageHandler.js');
 require('dotenv').config();
 const Topics = require('./config-topics.js').topics();
+
+
+// mosquitto_sub -h 10.0.0.103 -p 2883 -i some_identifier -t '#' -v
+// mosquitto_sub -h 10.0.0.103  -p 2883 -i some_identifier -u admin -P trinity -t 'event/metering/summation/minute' -v
+// don't need user and password
+// mosquitto_sub -h 10.0.0.103  -p 2883 -i some_identifier -t 'event/metering/summation/minute' -v
 
 
 
@@ -26,16 +33,17 @@ class EnergyBridge {
   }
 
   connect(options) {
-    ConsoleLogger.event("Attempting to connect to EnergyBridge...");
+    //ConsoleLogger.event("Attempting to connect to EnergyBridge...");
+    log.event("Attempting to connect to EnergyBridge...");
     var that = this;
-    this.client = mqtt.connect(`tcp://${this.ip}:${this.port}`, options);
+    this.client = mqtt.connect(`tcp://${this.ip}:${this.port}`, null); //options);
     this.addListeners();
   }
 
   disconnect() {
     var that = this;
     return new Promise(function(resolve, reject) {
-      ConsoleLogger.event("Disconnecting from EnergyBridge");
+      log.event("Disconnecting from EnergyBridge");
       that.client.end(true, function(){
         that.connectd = false;
         resolve();
@@ -54,12 +62,13 @@ class EnergyBridge {
   addListeners() {
     var that = this;
     this.client.on('connect', function(){
-          ConsoleLogger.event("EnergyBridge Connected");
+          log.event("EnergyBridge Connected");
           that.connected = true;
           that.addSubscriptions(that.subscriptionTopics)
     });
-    this.client.on('message', function (topic, message) {
-      MessageHandler.handle({topic:topic, body:message});
+    this.client.on('message', function (topic, payload, packet) {
+      //ConsoleLogger.yellow(JSON.stringify(packet));
+      MessageHandler.handle({topic:topic, body:payload});
     });
     this.client.on('error', function(error) {
       ConsoleLogger.fail(error.message);
@@ -70,18 +79,20 @@ class EnergyBridge {
       that.connected = false;
     });
     this.client.on('reconnect', function(error) {
-      ConsoleLogger.event("Reconnecting to Energy Bridge");
+      console.log("Reconnecting to Energy Bridge");
     });
     this.client.on('disconnect', function(error) {
-      ConsoleLogger.event("Energy Bridge disconnected");
+      console.log("Energy Bridge disconnected");
     });
     this.client.on('offline', function(error) {
-      ConsoleLogger.fail("Energy Bridge offline");
-      ConsoleLogger.fail("Be sure you are on the same local network that your Energy Bridge is connected to.");
+      //ConsoleLogger.fail("Energy Bridge offline");
+      console.log("Energy Bridge offline");
+      //ConsoleLogger.fail("Be sure you are on the same local network that your Energy Bridge is connected to.");
+      console.log("Be sure you are on the same local network that your Energy Bridge is connected to.");
       that.disconnect();
     });
     this.client.on('end', function() {
-      ConsoleLogger.event("Energy Bridge session ended");
+      console.log("Energy Bridge session ended");
     });
   }
 
@@ -89,13 +100,17 @@ class EnergyBridge {
     if (this.client) {
       let time = Date.now();
       let payload = JSON.stringify(this.getTimestampRequestIdBody()); //"{'timestamp':" + time.toString() + ", 'request_id':'CH5tlREh-3'}";
-      ConsoleLogger.event("Publishing to: remote/request/is_app_open");
+      console.log("Publishing to: remote/request/is_app_open");
       this.client.publish('remote/request/is_app_open', payload, {}, function(err) {
         if (err) {
-          ConsoleLogger.event("Error while publishing: " + err);
+          console.log("Error while publishing: " + err);
         }
       });
     }
+  }
+
+  requestSummation() {
+
   }
 
   getTopicByName(name) {

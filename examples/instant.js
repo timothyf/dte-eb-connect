@@ -1,17 +1,17 @@
-const EnergyBridge = require('./src/EnergyBridge.js');
+const EnergyBridge = require('../src/EnergyBridge.js');
 
-let instant = false;
-let summation = true;
+let instant = true;
+let summation = false;
 
 if (process.argv[2] && process.argv[2] === '--instant') {
   instant = true;
-  summation = true;
+  summation = false;
 }
 else if (process.argv[2] && process.argv[2] === '--summation') {
+  instant = false;
   summation = true;
 }
 
-console.log(`EB_IP = ${process.env.EB_IP}`);
 let eb = new EnergyBridge(process.env.EB_IP, process.env.EB_PORT, instant, summation);
 eb.connect({username:process.env.EB_USERNAME,
             password:process.env.EB_PASSWORD,

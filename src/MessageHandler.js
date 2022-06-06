@@ -1,4 +1,4 @@
-const ConsoleLogger = require('./loggers/ConsoleLogger.js');
+const ConsoleLogger = require('./ConsoleLogger.js').ConsoleLogger;
 const Topics = require('./config-topics.js').topics();
 
 
@@ -11,9 +11,12 @@ class MessageHandler {
     }
     else {
       if (message.topic.includes('polling_mode')) {return;} // don't log polling_mode messages
-      ConsoleLogger.content1(`TOPIC: ${message.topic}`);
+      ConsoleLogger.timestamp();
+      ConsoleLogger.topic(`TOPIC: ${message.topic}`);
       let msg = this.parse(message);
-      if (msg) {ConsoleLogger.white(msg);}
+      if (msg) {
+        ConsoleLogger.white(msg);
+      }
     }
   }
 
