@@ -19,11 +19,13 @@
     "dotenv": "^8.0.0",
     "handlebars": ">=4.7.7",
     "moment": "^2.10.2",
-    "mqtt": "2.18.8"
+    "mqtt": "2.18.8",
+    "tar": ">=4.4.18"
   },
   "devDependencies": {
     "ansi-regex": ">=4.1.1",
     "handlebars": ">=4.7.7",
-    "jest": "^24.8.0"
+    "jest": "^24.8.0",
+    "tar": ">=4.4.18"
   }
 }
