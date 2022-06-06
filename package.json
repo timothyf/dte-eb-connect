@@ -17,7 +17,7 @@
     "colors": "^1.0.3",
     "dotenv": "^8.0.0",
     "moment": "^2.10.2",
-    "mqtt": ">=2.18.8"
+    "mqtt": ">=4.0.0"
   },
   "devDependencies": {
     "jest": ">=26.0.0"
