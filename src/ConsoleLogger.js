@@ -1,28 +1,39 @@
 
 var chalk = require('chalk');
 var moment = require('moment');
+var LogColors = require('./LogColors.js');
 
 class ConsoleLogger {
+
+  static getColorFn(methodName) {
+    return LogColors[methodName].bgColor ?
+      chalk[LogColors[methodName].color][Colors[methodName].bgColor] :
+      chalk[LogColors[methodName].color]
+  }
+
   static timestamp() {
-    console.log(chalk.white.bgBlue("[" + moment().format() + "]"));
+    console.log(this.getColorFn(this.timestamp.name)("[" + moment().format() + "]"));
   }
   static log(message, severity) {
-    console.log(chalk.blue("[" + severity + "] [" + moment().format() + "] " + message));
+    console.log(this.getColorFn(this.log.name)("[" + severity + "] [" + moment().format() + "] " + message));
   }
   static event(message, includeTime) {
     message = includeTime ? "[" + moment().format() + "] " + message : message;
-    console.log(chalk.blue(message));
+    console.log(this.getColorFn(this.event.name)(message));
   }
   static topic(message, includeTime) {
     message = includeTime ? "[" + moment().format() + "] " + message : message;
-    console.log(chalk.blue.bgYellow.bold(message));
+    console.log(this.getColorFn(this.topic.name).bold(message));
   }
   static subscribe(message) {
-    console.log(chalk.green("[" + moment().format() + "] " + message));
+    console.log(this.getColorFn(this.subscribe.name)("[" + moment().format() + "] " +  message));
+  }
+  static publish(message) {
+    console.log(this.getColorFn(this.publish.name)("[" + moment().format() + "] " +  message));
   }
   static content1(message) {
     message = includeTime ? "[" + moment().format() + "] " + message : message;
-    console.log(chalk.green(message));
+    console.log(this.getColorFn(this.content1.name)(message));
   }
   static white(message, includeTime) {
     message = includeTime ? "[" + moment().format() + "] " + message : message;
@@ -32,22 +43,11 @@ class ConsoleLogger {
     console.log(chalk.yellow("[" + moment().format() + "] " + message));
   }
   static fail(message) {
-    console.log(chalk.red("[" + moment().format() + "] " + message));
+    console.log(this.getColorFn(this.fail.name)("[" + moment().format() + "] " +  message));
   }
 }
 
 
 module.exports = {
-  ConsoleLogger,
-    log: function(message, severity) {
-        console.log(chalk.blue("[" + severity + "] [" + moment().format() + "] " + message));
-    },
-
-    event: function(message) {
-        console.log(chalk.blue("[" + moment().format() + "] " + message));
-    },
-
-    subscribe: function(message) {
-      console.log(chalk.green("[" + moment().format() + "] " + message));
-    }
+  ConsoleLogger
 };

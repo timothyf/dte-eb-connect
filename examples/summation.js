@@ -1,6 +1,6 @@
 const EnergyBridge = require('../src/EnergyBridge.js');
 
-let eb = new EnergyBridge(process.env.EB_IP, process.env.EB_PORT, 'event_usage_instant');
+let eb = new EnergyBridge(process.env.EB_IP, process.env.EB_PORT, 'event_usage_summation');
 eb.connect({username:process.env.EB_USERNAME,
             password:process.env.EB_PASSWORD,
             clientId:process.env.EB_CLIENT_ID});

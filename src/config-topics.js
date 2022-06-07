@@ -1,7 +1,7 @@
 module.exports = {
   topics: function() {
     let topicsArray = [
-      { name: 'all', match:"#", enabled:true },
+      { name: 'all', match:"#", enabled:false },
 
       { name: 'announce', match:'announce', enabled:false },
       { name: 'clients', match:'clients/#', enabled:false },
